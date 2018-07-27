@@ -33,12 +33,13 @@ class GroupService
                 $pupilAlreadyInTheGroup = true;
             }
         }
-        if (!$pupilAlreadyInTheGroup) {
-            $group->addPupil($pupilToBeEnlisted);
-            $this->groupRepository->persist($group);
-        } else {
+
+        if ($pupilAlreadyInTheGroup) {
             throw new PupilAlreadyInGroupException;
         }
+
+        $group->addPupil($pupilToBeEnlisted);
+        $this->groupRepository->persist($group);
 
     }
 }
