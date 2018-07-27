@@ -5,33 +5,33 @@ namespace School;
 class GroupService
 {
     /** @var GroupRepository */
-    private $repository;
+    private $groupRepository;
 
     /** @var PupilRepository */
     private $pupilRepository;
 
-    public function __construct(GroupRepository $repository, PupilRepository $pupilRepository)
+    public function __construct(GroupRepository $groupRepository, PupilRepository $pupilRepository)
     {
-        $this->repository = $repository;
+        $this->groupRepository = $groupRepository;
         $this->pupilRepository = $pupilRepository;
     }
 
-    public function add($id, $pupilId)
+    public function enlistPupilInGroup($groupId, $pupilId)
     {
-        $group = $this->repository->find($id);
+        $group = $this->groupRepository->find($groupId);
 
-        $pupils = $group->getPupils();
-        $addPupil = $this->pupilRepository->find($pupilId);
-        if (count($pupils) < 3) {
-            $tmp = false;
-            foreach ($pupils as $pupil) {
-                if ($pupil->getId() == $addPupil->getId()) {
-                    $tmp = true;
+        $pupilsInGroup = $group->getPupils();
+        $pupilToBeEnlisted = $this->pupilRepository->find($pupilId);
+        if (count($pupilsInGroup) < 3) {
+            $pupilAlreadyInTheGroup = false;
+            foreach ($pupilsInGroup as $pupilInGroup) {
+                if ($pupilInGroup->getId() == $pupilToBeEnlisted->getId()) {
+                    $pupilAlreadyInTheGroup = true;
                 }
             }
-            if (!$tmp) {
-                $group->addPupil($addPupil);
-                $this->repository->persist($group);
+            if (!$pupilAlreadyInTheGroup) {
+                $group->addPupil($pupilToBeEnlisted);
+                $this->groupRepository->persist($group);
             } else {
                 throw new PupilAlreadyInGroupException;
             }
