@@ -27,33 +27,31 @@ class Group
     public function addPupil(Pupil $pupil) : void
     {
 
-        $this->guardAgainstTooManyPupils($group);
-        $this->guardAgainstDuplicatePupil($group, $pupilToBeEnlisted);
+        $this->guardAgainstTooManyPupils();
+        $this->guardAgainstDuplicatePupil($pupil);
 
         $this->pupils[] = $pupil;
     }
 
 
     /**
-     * @param $group
      * @throws TooManyPupilsException
      */
-    public function guardAgainstTooManyPupils(Group $group)
+    public function guardAgainstTooManyPupils()
     {
-        if (count($group->getPupils()) < 3) {
+        if (count($this->getPupils()) < 3) {
             throw new TooManyPupilsException;
         }
     }
 
     /**
-     * @param $group
      * @param $pupilToBeEnlisted
      * @throws PupilAlreadyInGroupException
      */
-    public function guardAgainstDuplicatePupil(Group $group, Pupil $pupilToBeEnlisted)
+    public function guardAgainstDuplicatePupil(Pupil $pupilToBeEnlisted)
     {
         $pupilAlreadyInTheGroup = false;
-        foreach ($group->getPupils() as $pupilInGroup) {
+        foreach ($this->getPupils() as $pupilInGroup) {
             if ($pupilInGroup->getId() == $pupilToBeEnlisted->getId()) {
                 $pupilAlreadyInTheGroup = true;
             }
